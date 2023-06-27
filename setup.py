@@ -10,7 +10,7 @@ print("Connecting to simulator…")
 socket = context.socket(zmq.REQ)
 socket.connect("tcp://localhost:5555")
 
-with open('setup.json', 'r') as file:
+with open('_setup.json', 'r') as file:
     message_json = file.read()
 
 socket.send_string(message_json)

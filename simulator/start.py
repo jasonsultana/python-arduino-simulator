@@ -35,6 +35,9 @@ def receive_messages():
 
         message_json = json.loads(message)
         # TODO: Handle different types of messages
+        # Deserialise as MessageBase first, look at the type, and then deserialise again
+        # probably want a message factory for this
+        
         # SetupMessage
         # CommandMessage
 
