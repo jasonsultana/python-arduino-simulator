@@ -5,6 +5,8 @@ import time
 import sys
 import signal
 
+from pymata.pymata import PyMata
+
 # Digital pin 13 is connected to an LED. If you are running this script with
 # an Arduino UNO no LED is needed (Pin 13 is connected to an internal LED).
 BOARD_LED = 13
