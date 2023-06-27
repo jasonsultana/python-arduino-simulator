@@ -1,0 +1,9 @@
+{
+    "window_title": "Jason's Arduino Simulator",
+    "components": [{
+        "name": "led",
+        "pin": 13,
+        "x": 165,
+        "y": 175
+    }]
+}
