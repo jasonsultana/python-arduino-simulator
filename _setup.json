@@ -1,4 +1,5 @@
 {
+    "message_type": "setup",
     "window_title": "Jason's Arduino Simulator",
     "components": [{
         "name": "led",

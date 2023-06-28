@@ -1,9 +1,7 @@
 # External
 import time
-
 import zmq
 import pygame
-import json
 from threading import *
 
 # Internal
@@ -12,18 +10,22 @@ from .messages.setup_message import SetupMessage
 from .breadboard.breadboard import Breadboard
 from .components.component import Component
 from .components.led.led import Led
+from .core.window import Window
+from .messages.message_factory import MessageFactory
+from .messages.handlers.setup_message_handler import SetupMessageHandler
 
 pygame.init()
 screen = pygame.display.set_mode((1000, 750))
 
 lock = Lock()
-window_caption = ''
+window = Window()
 breadboard = Breadboard(screen, top=50)
 header = Header(screen)
+message_handlers = [
+    SetupMessageHandler()
+]
 
 def receive_messages():
-    global window_caption
-    
     context = zmq.Context()
     socket = context.socket(zmq.REP)
     socket.bind("tcp://*:5555")
@@ -33,26 +35,14 @@ def receive_messages():
         message = socket.recv().decode('utf-8')
         print("Received request: %s" % message)
 
-        message_json = json.loads(message)
-        # TODO: Handle different types of messages
-        # Deserialise as MessageBase first, look at the type, and then deserialise again
-        # probably want a message factory for this
-        
-        # SetupMessage
-        # CommandMessage
-
-        message_obj = SetupMessage(**message_json)
+        message_obj = MessageFactory.createMessage(message)
 
         with lock:
             print("message thread acquired lock.")
-            window_caption = message_obj.window_title
-
-            # add components to the breadboard
-            for component in message_obj.components:
-                if component.name == 'led':
-                    breadboard.add(Led(component.pin, component.x, component.y))
-                # todo: Perhaps a component factory would be best here
-
+            for handler in message_handlers:
+                if handler.handles(message_obj):
+                    handler.handle(message_obj, window, breadboard)
+                    
         #  Send reply back to client
         socket.send(b"OK")
 
@@ -80,7 +70,7 @@ def update_ui():
 
         with lock:
             print("ui thread acquired lock.")
-            pygame.display.set_caption(window_caption)
+            pygame.display.set_caption(window.title)
 
         # Show the new frame
         pygame.display.flip()

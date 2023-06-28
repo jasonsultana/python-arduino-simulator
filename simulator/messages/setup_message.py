@@ -9,9 +9,10 @@ class ComponentMessage(BaseModel):
     x: int
     y: int
 
-class SetupMessage(BaseModel, MessageBase):
+class SetupMessage(BaseModel):
+    message_type: str
     window_title: str
     components: List[ComponentMessage]
 
-    def __init__(self):
-        self.message_type = 'SetupMessage'
+    # def __init__(self):
+    #     self.message_type = 'SetupMessage'
