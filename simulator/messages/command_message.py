@@ -12,9 +12,11 @@ class CommandMessage(BaseModel):
         
     @staticmethod
     def create(pin, command_text, command_value):
-        message = CommandMessage()
-        message.pin = pin
-        message.command_text = command_text
-        message.command_value = command_value
+        message = {
+            "message_type": "command",
+            "pin": pin,
+            "command_text": command_text,
+            "command_value": command_value
+        }
 
         return message

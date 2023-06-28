@@ -3,7 +3,7 @@ from ..component import Component
 
 class Led(Component):
     def __init__(self, pin_no, x, y):
-        self.pin_no = pin_no
+        self.pin = pin_no
         self.x = x
         self.y = y
         self.image = pygame.image.load('./simulator/components/led/led_off.png').convert_alpha()

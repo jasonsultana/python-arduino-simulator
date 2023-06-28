@@ -1,4 +1,4 @@
-from simulator.breadboard.breadboard import Breadboard
+from ...breadboard.breadboard import Breadboard
 from ...core.window import Window
 from ..message_base import MessageBase
 

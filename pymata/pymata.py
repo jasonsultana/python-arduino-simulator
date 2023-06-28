@@ -2,8 +2,6 @@ from simulator.messages.command_message import CommandMessage
 import zmq
 import json
 
-context = zmq.Context()
-
 class PyMata:
     INPUT = 0
     OUTPUT = 1
@@ -14,6 +12,8 @@ class PyMata:
     def __init__(self, simulator_url, verbose: bool):
         self.url = simulator_url
         self.verbose = verbose
+
+        context = zmq.Context()
 
         self.socket = context.socket(zmq.REQ)
         self.socket.connect(simulator_url)
@@ -33,3 +33,4 @@ class PyMata:
     def __send_message(self, message: CommandMessage):
         message_json = json.dumps(message)
         self.socket.send_string(message_json)
+        self.socket.recv()

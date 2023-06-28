@@ -13,6 +13,7 @@ from .components.led.led import Led
 from .core.window import Window
 from .messages.message_factory import MessageFactory
 from .messages.handlers.setup_message_handler import SetupMessageHandler
+from .messages.handlers.command_message_handler import CommandMessageHandler
 
 pygame.init()
 screen = pygame.display.set_mode((1000, 750))
@@ -22,7 +23,8 @@ window = Window()
 breadboard = Breadboard(screen, top=50)
 header = Header(screen)
 message_handlers = [
-    SetupMessageHandler()
+    SetupMessageHandler(),
+    CommandMessageHandler()
 ]
 
 def receive_messages():
