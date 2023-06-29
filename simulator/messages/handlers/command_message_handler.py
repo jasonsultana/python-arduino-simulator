@@ -13,7 +13,7 @@ class CommandMessageHandler:
                 return
         
         if message.command_text == "digital_write":
-            component.digital_write(message.pin, int(message.command_value))
+            component.digital_write(message.pin, message.command_value)
 
         # todo: Add support for potentially more commands
 

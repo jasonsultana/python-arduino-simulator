@@ -1,5 +1,5 @@
 # Make sure that the simulator is running and has been set up before executing this script
-# Sample from https://github.com/MrYsLab/PyMata/blob/master/examples/pymata_blink.py
+# Sample from https://github.com/MrYsLab/PyMata/blob/master/examples/piezo/piezo_beep.py
 
 import time
 import sys
@@ -7,38 +7,26 @@ import signal
 
 from pymata.pymata import PyMata
 
-# Digital pin 13 is connected to an LED. If you are running this script with
-# an Arduino UNO no LED is needed (Pin 13 is connected to an internal LED).
-BOARD_LED = 13
+BEEPER = 3  # pin that piezo device is attached to
 
-# Create a PyMata instance
-board = PyMata("tcp://localhost:5555", verbose=True)
+# create a PyMata instance
+board = PyMata("tcp://localhost:5555")
 
-# Set digital pin 13 to be an output port
-board.set_pin_mode(BOARD_LED, board.OUTPUT, board.DIGITAL)
+def signal_handler(sig, frm):
+    print('You pressed Ctrl+C!!!!')
+    if board is not None:
+        board.reset()
+    sys.exit(0)
 
+
+signal.signal(signal.SIGINT, signal_handler)
+
+board.play_tone(BEEPER, board.TONE_TONE, 1000, 500)
 time.sleep(2)
-print("Blinking LED on pin 13 for 10 times ...")
 
-# Blink for 10 times
-for x in range(10):
-    print(x + 1)
-    print("Writing High")
+# play a continuous tone, wait 3 seconds and then turn tone off
+board.play_tone(BEEPER, board.TONE_TONE, 1000, 0)
+time.sleep(3)
+board.play_tone(BEEPER, board.TONE_NO_TONE, 1000, 0)
 
-    # Set the output to 1 = High
-    board.digital_write(BOARD_LED, 1)
-    # Wait a half second between toggles.
-    time.sleep(.5)
-    # Set the output to 0 = Low
-    print("Writing low")
-    board.digital_write(BOARD_LED, 0)
-    time.sleep(.5)
-
-# Close PyMata when we are done
 board.close()
-
-# Required functions:
-# PyMata(connection) (to create the board)
-# set_pin_mode(led, mode)
-# digital_write(led, value)
-# close (should probably terminate pygame?)

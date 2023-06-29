@@ -11,7 +11,8 @@ class Led(Component):
 
         self.image = self.off_image
 
-    def digital_write(self, pin: int, value: int):
+    def digital_write(self, pin: int, value: str):
+        value = int(value)
         if (value == 0):
             self.image = self.off_image
         elif (value == 1):
