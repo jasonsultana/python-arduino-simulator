@@ -71,13 +71,13 @@ def update_ui():
         breadboard.draw()
 
         with lock:
-            print("ui thread acquired lock.")
+            #print("ui thread acquired lock.")
             pygame.display.set_caption(window.title)
 
         # Show the new frame
         pygame.display.flip()
 
-        time.sleep(1)
+        time.sleep(0.1)
 
     # deactivates the pygame library
     pygame.quit()

@@ -8,13 +8,20 @@ class CommandMessageHandler:
         return isinstance(message, CommandMessage)
     
     def handle(self, message: CommandMessage, window: Window, breadboard: Breadboard):
-        # find the component on the board connected to the corresponding pin
-        for component in breadboard.components:
-            if component.pin == message.pin:
-                if message.command_text == "digital_write":
-                    component.digital_write(int(message.command_value))
-
-        # if the command text is digital_write, invoke the digital_write method on the component
+        component = self.__find_component(breadboard, message.pin)
+        if component is None:
+                return
+        
+        if message.command_text == "digital_write":
+            component.digital_write(message.pin, int(message.command_value))
 
         # todo: Add support for potentially more commands
-        pass
+
+    def __find_component(self, breadboard: Breadboard, pin: int):
+        # find the component on the board connected to the corresponding pin
+        for component in breadboard.components:
+            if component.pin == pin:
+                 return component
+            
+        return None
+            
