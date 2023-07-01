@@ -1,4 +1,5 @@
 from simulator.messages.command_message import CommandMessage
+from simulator.messages.query_string import QueryString
 import zmq
 import json
 
@@ -12,7 +13,7 @@ class PyMata:
     TONE_TONE = 0
     TONE_NO_TONE = 1
 
-    def __init__(self, simulator_url, verbose: bool):
+    def __init__(self, simulator_url, verbose: bool = True):
         self.url = simulator_url
         self.verbose = verbose
 
@@ -26,7 +27,15 @@ class PyMata:
         pass
 
     def play_tone(self, pin, tone_command, frequency, duration):
-        message = CommandMessage.create(pin, 'play_tone', f"cmd={tone_command}&frequency={frequency}&duration={duration}")
+        qs = (QueryString
+            .builder()
+            .add('cmd', tone_command)
+            .add('frequency', frequency)
+            .add('duration', duration)
+            .build()
+        )
+
+        message = CommandMessage.create(pin, 'play_tone', qs)
         self.__send_message(message)
 
     def set_pin_mode(self, pin, pin_mode, signal_type):
